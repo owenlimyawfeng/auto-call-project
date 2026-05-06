@@ -505,27 +505,6 @@ function CampaignDetailScreen() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-            {/* Funnel */}
-            <CrmCard padding={20}>
-              <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 800 }}>Outcome funnel</h3>
-              {[
-                ['Placed',         142, 142, 'var(--crm-green)'],
-                ['Connected',      101, 142, 'var(--crm-green)'],
-                ['Engaged',         85, 142, 'var(--crm-green)'],
-                ['Booking offered', 72, 142, 'var(--crm-info)'],
-                ['Booked (conv.)',  38, 142, 'var(--crm-green-deep)'],
-              ].map(([l, v, base, c]) => (
-                <div key={l} style={{ display: 'grid', gridTemplateColumns: '140px 1fr 80px 60px', alignItems: 'center', gap: 12, padding: '8px 0' }}>
-                  <span style={{ fontSize: 13, color: 'var(--crm-fg-2)' }}>{l}</span>
-                  <span style={{ height: 22, background: 'var(--crm-bg)', borderRadius: 4, overflow: 'hidden', display: 'flex', alignItems: 'center', paddingLeft: 6 }}>
-                    <span style={{ width: `${v / base * 100}%`, height: '100%', background: c, borderRadius: 4, marginLeft: -6 }} />
-                  </span>
-                  <span style={{ fontWeight: 700, fontSize: 13 }}>{v}</span>
-                  <span style={{ fontSize: 11, color: 'var(--crm-fg-2)' }}>{Math.round(v / base * 100)}%</span>
-                </div>
-              ))}
-            </CrmCard>
-
             {/* Recent outcomes */}
             <CrmCard padding={0}>
               <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--crm-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

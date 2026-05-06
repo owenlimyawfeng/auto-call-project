@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx --yes serve --version)",
+      "Bash(python3 -c \"import http.server; print\\('ok'\\)\")"
+    ]
+  }
+}

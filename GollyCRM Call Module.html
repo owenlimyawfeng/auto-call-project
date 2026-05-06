@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GollyCRM — Call Center module</title>
+<link rel="stylesheet" href="src/gocar-tokens.css">
+<link rel="stylesheet" href="src/crm.css">
+<style>
+  body { margin: 0; background: #f0eee9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  /* Each artboard hosts its own CRM app shell — clip & enable internal scroll */
+  .crm-frame { width: 100%; height: 100%; overflow: hidden; background: var(--crm-bg); display: flex; flex-direction: column; }
+  .crm-frame > * { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="src/design-canvas.jsx"></script>
+<script type="text/babel" src="src/tweaks-panel.jsx"></script>
+<script type="text/babel" src="src/crm-shell.jsx"></script>
+<script type="text/babel" src="src/screen-workspace.jsx"></script>
+<script type="text/babel" src="src/screen-logs.jsx"></script>
+<script type="text/babel" src="src/screen-campaigns.jsx"></script>
+<script type="text/babel" src="src/screen-bot.jsx"></script>
+<script type="text/babel" src="src/screen-reports.jsx"></script>
+<script type="text/babel" src="src/screen-campaigns-extra.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "GoCar Green",
+  "sidebarTone": "Dark navy",
+  "density": "Compact",
+  "font": "Inter system",
+  "showSentiment": true,
+  "showBotBadges": true
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  'GoCar Green': { '--crm-green': '#09A77E', '--crm-green-deep': '#0B7A5C', '--crm-green-soft': '#E0F2EC' },
+  'Indigo':      { '--crm-green': '#4F46E5', '--crm-green-deep': '#3730A3', '--crm-green-soft': '#E5E7FB' },
+  'Cobalt':      { '--crm-green': '#1E63D6', '--crm-green-deep': '#1A4FAA', '--crm-green-soft': '#E1ECFB' },
+  'Amber':       { '--crm-green': '#D97706', '--crm-green-deep': '#92400E', '--crm-green-soft': '#FEF3C7' },
+};
+const SIDEBARS = {
+  'Dark navy':  { '--crm-navy': '#0F1A2C', '--crm-navy-2': '#1A2740' },
+  'Slate':      { '--crm-navy': '#1F2937', '--crm-navy-2': '#374151' },
+  'Carbon':     { '--crm-navy': '#111111', '--crm-navy-2': '#1F1F1F' },
+};
+const DENSITIES = {
+  'Compact':   { '--crm-row-h': '40px', '--crm-pad': '12px' },
+  'Balanced':  { '--crm-row-h': '48px', '--crm-pad': '16px' },
+  'Roomy':     { '--crm-row-h': '56px', '--crm-pad': '20px' },
+};
+
+function applyTokens(tweaks) {
+  const root = document.documentElement;
+  Object.entries({ ...ACCENTS[tweaks.accent], ...SIDEBARS[tweaks.sidebarTone], ...DENSITIES[tweaks.density] }).forEach(([k, v]) => root.style.setProperty(k, v));
+}
+
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  React.useEffect(() => applyTokens(tweaks), [tweaks]);
+
+  const W = 1440, H = 900, MOBILE_W = 1280, MOBILE_H = 820;
+
+  return (
+    <>
+      <DesignCanvas title="GollyCRM — Call Center module" subtitle="Agent workspace · Auto-call campaigns · Bot builder · Reports">
+        {/* Section 1 — The agent's day */}
+        <DCSection id="agent" title="The agent's day" subtitle="Three-pane live call workspace, customer profile, and call detail.">
+          <DCArtboard id="ws"   label="Agent workspace · live call" width={W} height={H}>
+            <div className="crm-frame"><AgentWorkspace /></div>
+          </DCArtboard>
+          <DCArtboard id="cust" label="Customer profile during call" width={W} height={H}>
+            <div className="crm-frame"><CustomerProfileScreen /></div>
+          </DCArtboard>
+          <DCArtboard id="detail" label="Single call detail · transcript & QA" width={W} height={H}>
+            <div className="crm-frame"><CallDetailScreen /></div>
+          </DCArtboard>
+        </DCSection>
+
+        {/* Section 2 — Inbox & history */}
+        <DCSection id="logs" title="Logs &amp; queue" subtitle="Redesign of the existing call-logs grid — faster scan, clearer status.">
+          <DCArtboard id="logs1" label="Call logs · all calls" width={W} height={H}>
+            <div className="crm-frame"><CallLogsScreen /></div>
+          </DCArtboard>
+        </DCSection>
+
+        {/* Section 3 — Auto-call campaigns: list variations */}
+        <DCSection id="camp" title="Auto-call campaigns · list views" subtitle="Three sharp directions for the campaigns list — pick one, or mix.">
+          <DCArtboard id="campList"    label="V1 · Table (current)"        width={W} height={H}><div className="crm-frame"><CampaignsScreen /></div></DCArtboard>
+          <DCArtboard id="campKanban"  label="V2 · Kanban — pipeline by status" width={W} height={H}><div className="crm-frame"><CampaignsKanban /></div></DCArtboard>
+          <DCArtboard id="campDash"    label="V3 · Operational dashboard"  width={W} height={H}><div className="crm-frame"><CampaignsDashboard /></div></DCArtboard>
+          <DCArtboard id="campWar"     label="V4 · Live control room"      width={W} height={H}><div className="crm-frame"><CampaignsControlRoom /></div></DCArtboard>
+        </DCSection>
+
+        {/* Section 3b — Drilling into a campaign */}
+        <DCSection id="campDetail" title="Campaign detail" subtitle="Drill into one running campaign — funnel, hourly, latest outcomes, edit on the fly.">
+          <DCArtboard id="campOne" label="Campaign detail · live monitor" width={W} height={H}><div className="crm-frame"><CampaignDetailScreen /></div></DCArtboard>
+        </DCSection>
+
+        {/* Section 3c — Builder variations */}
+        <DCSection id="campBuilder" title="Campaign builder" subtitle="Two flows: a guided 5-step wizard, and a single-page setup with live voice + cost + approval.">
+          <DCArtboard id="campBuild"   label="V1 · 5-step wizard"  width={W} height={H}><div className="crm-frame"><CampaignBuilderScreen /></div></DCArtboard>
+          <DCArtboard id="campBuildV2" label="V2 · Single-page · voice preview · live cost · approval" width={W} height={H}><div className="crm-frame"><CampaignBuilderV2 /></div></DCArtboard>
+        </DCSection>
+
+
+        {/* Section 4 — Caller bot */}
+        <DCSection id="bot" title="Caller bot" subtitle="Linear flow builder, top-to-bottom — like a form builder.">
+          <DCArtboard id="botLib"   label="Bot template library" width={W} height={H}>
+            <div className="crm-frame"><BotLibraryScreen /></div>
+          </DCArtboard>
+          <DCArtboard id="botCreate" label="Create new bot template" width={W} height={H}>
+            <div className="crm-frame"><CreateBotTemplateScreen /></div>
+          </DCArtboard>
+        </DCSection>
+
+        {/* Section 5 — Manager view */}
+        <DCSection id="reports" title="Manager reports" subtitle="Volume &amp; SLA · bot performance · campaign ROI · agent leaderboard.">
+          <DCArtboard id="rep" label="Reports dashboard" width={W} height={H}>
+            <div className="crm-frame"><ReportsScreen /></div>
+          </DCArtboard>
+        </DCSection>
+
+        <DCPostIt x={40} y={60}>
+          GollyCRM Call Module · 9 screens · built on the existing GollyCRM dark-navy + green look. Drag artboards to reorder; click any to focus.
+        </DCPostIt>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Brand">
+          <TweakRadio label="Accent"       value={tweaks.accent}      options={Object.keys(ACCENTS)}  onChange={v => setTweak('accent', v)} />
+          <TweakRadio label="Sidebar tone" value={tweaks.sidebarTone} options={Object.keys(SIDEBARS)} onChange={v => setTweak('sidebarTone', v)} />
+        </TweakSection>
+        <TweakSection title="Density">
+          <TweakRadio label="Row density"  value={tweaks.density}     options={Object.keys(DENSITIES)} onChange={v => setTweak('density', v)} />
+        </TweakSection>
+        <TweakSection title="Show / hide">
+          <TweakToggle label="Live sentiment meters" value={tweaks.showSentiment} onChange={v => setTweak('showSentiment', v)} />
+          <TweakToggle label="Bot badges in tables"  value={tweaks.showBotBadges} onChange={v => setTweak('showBotBadges', v)} />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

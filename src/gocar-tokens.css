@@ -1,0 +1,218 @@
+/* GoCar Design System — Colors & Typography
+   Source of truth: GOCAR BRAND Guideline (12.04.2023) */
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/Montserrat-VariableFont_wght.ttf') format('truetype-variations'),
+       url('fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  /* path is relative to this CSS file (src/fonts/...) */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/Montserrat-Italic-VariableFont_wght.ttf') format('truetype-variations'),
+       url('fonts/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ── Primary brand greens ── */
+  --gc-green:        #09A77E;   /* Pantone Bright Green C — primary brand */
+  --gc-green-deep:   #00563F;   /* Pantone 7729C — deep accent / dark surfaces */
+  --gc-green-bright: #00C89C;   /* Pantone 339C — bright supporting */
+  --gc-green-pine:   #00937E;   /* Pantone 3285 C — secondary supporting */
+
+  /* Tints (opacity steps from brand guideline) */
+  --gc-green-20: #cfede4;
+  --gc-green-30: #b9e5d8;
+  --gc-green-40: #a3decc;
+  --gc-green-50: #84d3bf;
+  --gc-green-60: #6ccab1;
+  --gc-green-70: #54c1a4;
+  --gc-green-80: #3cb896;
+  --gc-green-90: #24af8a;
+
+  /* ── Neutrals ── */
+  --gc-cool-gray:    #EBEBED;   /* Pantone Cool Gray 1 */
+  --gc-gray:         #6E6D6F;   /* Pantone 424C */
+  --gc-white:        #FFFFFF;
+  --gc-black:        #111213;
+
+  /* Surface scale (engineered from brand grays) */
+  --gc-surface-0: #FFFFFF;
+  --gc-surface-1: #F7F7F8;
+  --gc-surface-2: #EBEBED;
+  --gc-surface-3: #D9D9DC;
+  --gc-surface-4: #B6B5B8;
+
+  /* ── Semantic foreground ── */
+  --gc-fg-1: #1F2022;          /* primary text on light */
+  --gc-fg-2: #6E6D6F;          /* secondary text — brand gray */
+  --gc-fg-3: #9A999C;          /* tertiary / placeholder */
+  --gc-fg-on-green: #FFFFFF;   /* text on green surfaces */
+  --gc-fg-link: #00937E;       /* link / interactive */
+
+  /* ── Semantic status (engineered, on-brand) ── */
+  --gc-success: #09A77E;
+  --gc-warning: #E0A100;
+  --gc-danger:  #D8443C;
+  --gc-info:    #007D9C;
+
+  /* ── Borders ── */
+  --gc-border-1: #E4E4E7;
+  --gc-border-2: #D0D0D3;
+  --gc-border-strong: #6E6D6F;
+
+  /* ── Radii ── */
+  --gc-radius-xs: 4px;
+  --gc-radius-sm: 8px;
+  --gc-radius-md: 12px;
+  --gc-radius-lg: 16px;
+  --gc-radius-xl: 24px;
+  --gc-radius-pill: 999px;
+
+  /* ── Spacing (4px base) ── */
+  --gc-space-1: 4px;
+  --gc-space-2: 8px;
+  --gc-space-3: 12px;
+  --gc-space-4: 16px;
+  --gc-space-5: 20px;
+  --gc-space-6: 24px;
+  --gc-space-8: 32px;
+  --gc-space-10: 40px;
+  --gc-space-12: 48px;
+  --gc-space-16: 64px;
+
+  /* ── Shadows ── */
+  --gc-shadow-sm: 0 1px 2px rgba(17, 18, 19, 0.06), 0 1px 1px rgba(17, 18, 19, 0.04);
+  --gc-shadow-md: 0 4px 12px rgba(17, 18, 19, 0.08), 0 2px 4px rgba(17, 18, 19, 0.04);
+  --gc-shadow-lg: 0 12px 32px rgba(17, 18, 19, 0.12), 0 4px 8px rgba(17, 18, 19, 0.06);
+  --gc-shadow-green: 0 8px 20px rgba(9, 167, 126, 0.28);
+
+  /* ── Type ── */
+  --gc-font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  --gc-font-mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, monospace;
+
+  /* Weights — brand uses Extra Bold / Bold / Semi Bold / Regular / Italic */
+  --gc-weight-regular: 400;
+  --gc-weight-medium: 500;
+  --gc-weight-semi: 600;
+  --gc-weight-bold: 700;
+  --gc-weight-extra: 800;
+
+  /* Type scale — sized for marketing + product */
+  --gc-text-xs:   12px;
+  --gc-text-sm:   14px;
+  --gc-text-base: 16px;
+  --gc-text-md:   18px;
+  --gc-text-lg:   20px;
+  --gc-text-xl:   24px;
+  --gc-text-2xl:  32px;
+  --gc-text-3xl:  40px;
+  --gc-text-4xl:  56px;
+  --gc-text-5xl:  72px;
+
+  /* Line heights */
+  --gc-leading-tight: 1.1;
+  --gc-leading-snug:  1.25;
+  --gc-leading-normal: 1.5;
+  --gc-leading-relaxed: 1.65;
+
+  /* Letter spacing — brand uses tight, slightly negative on display */
+  --gc-tracking-tight: -0.02em;
+  --gc-tracking-normal: 0;
+  --gc-tracking-wide: 0.04em;
+}
+
+/* ── Semantic element styles ── */
+html, body {
+  font-family: var(--gc-font-sans);
+  color: var(--gc-fg-1);
+  background: var(--gc-surface-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display headlines — brand "Brand / Guideline" pattern: dark + green stacked, Extra Bold */
+.gc-display, h1.gc-display {
+  font-family: var(--gc-font-sans);
+  font-weight: var(--gc-weight-extra);
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: var(--gc-leading-tight);
+  letter-spacing: var(--gc-tracking-tight);
+  color: var(--gc-fg-1);
+}
+.gc-display-accent { color: var(--gc-green); }
+
+h1, .gc-h1 {
+  font-weight: var(--gc-weight-extra);
+  font-size: var(--gc-text-3xl);
+  line-height: var(--gc-leading-tight);
+  letter-spacing: var(--gc-tracking-tight);
+  color: var(--gc-fg-1);
+}
+h2, .gc-h2 {
+  font-weight: var(--gc-weight-bold);
+  font-size: var(--gc-text-2xl);
+  line-height: var(--gc-leading-snug);
+  letter-spacing: var(--gc-tracking-tight);
+  color: var(--gc-fg-1);
+}
+h3, .gc-h3 {
+  font-weight: var(--gc-weight-bold);
+  font-size: var(--gc-text-xl);
+  line-height: var(--gc-leading-snug);
+  color: var(--gc-fg-1);
+}
+h4, .gc-h4 {
+  font-weight: var(--gc-weight-semi);
+  font-size: var(--gc-text-md);
+  line-height: var(--gc-leading-snug);
+  color: var(--gc-fg-1);
+}
+
+p, .gc-body {
+  font-size: var(--gc-text-base);
+  line-height: var(--gc-leading-relaxed);
+  color: var(--gc-fg-1);
+}
+.gc-body-sm { font-size: var(--gc-text-sm); line-height: var(--gc-leading-normal); }
+.gc-body-muted { color: var(--gc-fg-2); }
+
+/* Eyebrow — brand "BRAND GUIDELINE" pattern: uppercase, regular, gray */
+.gc-eyebrow {
+  font-size: var(--gc-text-sm);
+  font-weight: var(--gc-weight-regular);
+  letter-spacing: var(--gc-tracking-wide);
+  text-transform: uppercase;
+  color: var(--gc-fg-2);
+}
+
+.gc-overline {
+  font-size: var(--gc-text-xs);
+  font-weight: var(--gc-weight-semi);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gc-fg-2);
+}
+
+a, .gc-link {
+  color: var(--gc-fg-link);
+  text-decoration: none;
+}
+a:hover, .gc-link:hover { color: var(--gc-green); }
+
+code, .gc-code {
+  font-family: var(--gc-font-mono);
+  font-size: 0.92em;
+  background: var(--gc-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+/* Selection */
+::selection { background: var(--gc-green); color: #fff; }

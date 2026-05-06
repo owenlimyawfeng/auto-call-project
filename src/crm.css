@@ -1,0 +1,86 @@
+/* GollyCRM — Call Module styles */
+
+:root {
+  /* Brand: GollyCRM uses a deep navy sidebar with GoCar green accents */
+  --crm-navy:        #0E2A38;
+  --crm-navy-2:      #102E3D;
+  --crm-navy-3:      #1A3D4E;
+  --crm-navy-4:      #2A5060;
+  --crm-navy-line:   #1F4456;
+  --crm-navy-fg:     #E6EEF2;
+  --crm-navy-fg-2:   #94B0BD;
+
+  --crm-green:       #09A77E;
+  --crm-green-deep:  #00563F;
+  --crm-green-soft:  #E6F6F0;
+  --crm-green-tint:  #cfede4;
+
+  --crm-bg:          #F5F6F8;
+  --crm-surface:     #FFFFFF;
+  --crm-border:      #E4E6EA;
+  --crm-border-2:    #D7DAE0;
+
+  --crm-fg-1:        #0F1A24;
+  --crm-fg-2:        #5C6573;
+  --crm-fg-3:        #8B92A0;
+
+  --crm-warning:     #E0A100;
+  --crm-warning-bg:  #FFF6DD;
+  --crm-danger:      #D8443C;
+  --crm-danger-bg:   #FDECEB;
+  --crm-info:        #007D9C;
+  --crm-info-bg:     #DCF0F5;
+  --crm-blue:        #2563EB;
+  --crm-blue-bg:     #E5EEFF;
+  --crm-purple:      #7B5BD8;
+  --crm-purple-bg:   #EFEBFC;
+
+  --crm-radius-sm: 6px;
+  --crm-radius:    10px;
+  --crm-radius-lg: 14px;
+
+  --crm-shadow-sm: 0 1px 2px rgba(15,26,36,.06), 0 1px 1px rgba(15,26,36,.04);
+  --crm-shadow:    0 4px 16px rgba(15,26,36,.08), 0 1px 3px rgba(15,26,36,.05);
+  --crm-shadow-lg: 0 12px 32px rgba(15,26,36,.14), 0 4px 8px rgba(15,26,36,.06);
+
+  --crm-tab-h: 56px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--crm-bg);
+  color: var(--crm-fg-1);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* Scrollbars (subtle) */
+.crm-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.crm-scroll::-webkit-scrollbar-thumb { background: #C6CAD2; border-radius: 999px; }
+.crm-scroll::-webkit-scrollbar-track { background: transparent; }
+.crm-scroll-dark::-webkit-scrollbar { width: 8px; }
+.crm-scroll-dark::-webkit-scrollbar-thumb { background: var(--crm-navy-3); border-radius: 999px; }
+
+/* Utility: blink (recording dot) */
+@keyframes crm-blink { 0%, 60% { opacity: 1; } 70%, 100% { opacity: .25; } }
+.crm-blink { animation: crm-blink 1.4s infinite; }
+
+@keyframes crm-pulse-ring {
+  0% { transform: scale(.85); opacity: .9; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.crm-pulse-ring::before, .crm-pulse-ring::after {
+  content: ''; position: absolute; inset: 0; border-radius: 999px;
+  border: 2px solid currentColor; animation: crm-pulse-ring 1.6s ease-out infinite;
+}
+.crm-pulse-ring::after { animation-delay: .8s; }
+
+@keyframes crm-wave {
+  0%, 100% { transform: scaleY(.3); }
+  50% { transform: scaleY(1); }
+}

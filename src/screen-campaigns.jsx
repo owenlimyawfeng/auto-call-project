@@ -255,9 +255,8 @@ function CampaignBuilderScreen() {
   function StepRecipients() {
     const [src, setSrc] = useState('list');
     const SOURCES = [
-      { id: 'csv',     icon: 'upload', label: 'Upload CSV',  sub: 'Drop a list of phone numbers' },
-      { id: 'list',    icon: 'users',  label: 'Saved list',  sub: '18 lists available' },
-      { id: 'segment', icon: 'filter', label: 'CRM segment', sub: 'Filter from members' },
+      { id: 'csv',  icon: 'upload', label: 'Upload CSV', sub: 'Drop a list of phone numbers' },
+      { id: 'list', icon: 'users',  label: 'Saved list', sub: '18 lists available' },
     ];
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -266,9 +265,9 @@ function CampaignBuilderScreen() {
             <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>Recipients</h3>
             <span style={{ fontSize: 12, color: 'var(--crm-fg-2)' }}>· Step 2 of 5</span>
           </div>
-          <p style={{ margin: '0 0 16px', fontSize: 13, color: 'var(--crm-fg-2)' }}>Upload a CSV, pick an existing list, or build a segment from your CRM.</p>
+          <p style={{ margin: '0 0 16px', fontSize: 13, color: 'var(--crm-fg-2)' }}>Upload a CSV or pick an existing saved list.</p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 18 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 18 }}>
             {SOURCES.map(o => (
               <button key={o.id} onClick={() => setSrc(o.id)} style={{
                 padding: 14, textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit',
@@ -358,15 +357,7 @@ function CampaignBuilderScreen() {
             </div>
           </>}
 
-          {/* CRM segment */}
-          {src === 'segment' && (
-            <div style={{ padding: 24, border: '1px solid var(--crm-border)', borderRadius: 12, background: '#fafbfc', textAlign: 'center' }}>
-              <span style={{ width: 48, height: 48, borderRadius: 12, background: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--crm-shadow-sm)', margin: '0 auto' }}><CrmIcon name="filter" size={22} /></span>
-              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 12 }}>Build a CRM segment</div>
-              <div style={{ fontSize: 12, color: 'var(--crm-fg-2)', marginTop: 4, marginBottom: 14 }}>Filter members by plan, activity, location and more.</div>
-              <CrmButton variant="secondary" size="sm" icon="filter">Open segment builder</CrmButton>
-            </div>
-          )}
+
         </CrmCard>
       </div>
     );

@@ -278,8 +278,9 @@ const NAV_SECTIONS = [
       { id: 'workspace', icon: 'phone',    label: 'Agent Workspace' },
       { id: 'logs',      icon: 'list',     label: 'Call Logs', count: 1284 },
       { id: 'campaigns', icon: 'campaign', label: 'Auto Call Campaigns' },
-      { id: 'bots',      icon: 'bot',      label: 'Caller Bots' },
-      { id: 'reports',   icon: 'bar',      label: 'Reports & Analytics' },
+      { id: 'bots',       icon: 'bot',      label: 'Caller Bots' },
+      { id: 'botInsight', icon: 'trend',    label: 'Insight' },
+      { id: 'reports',    icon: 'bar',      label: 'Reports & Analytics' },
     ],
   },
   {
@@ -344,21 +345,25 @@ function CrmSidebar({ active, onNav, collapsed }) {
           )}
           {sec.items.map(item => {
             const isActive = active === item.id;
+            const isSub = !!item.sub;
             return (
               <button key={item.id} onClick={() => onNav && onNav(item.id)} style={{
-                width: '100%', height: 38,
-                padding: collapsed ? '0' : '0 10px',
+                width: '100%', height: isSub ? 32 : 38,
+                padding: collapsed ? '0' : isSub ? '0 10px 0 36px' : '0 10px',
                 display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'space-between',
                 gap: 10, background: isActive ? 'var(--crm-green)' : 'transparent',
-                color: isActive ? '#fff' : 'var(--crm-navy-fg)',
+                color: isActive ? '#fff' : isSub ? 'var(--crm-navy-fg-2)' : 'var(--crm-navy-fg)',
                 border: 'none', borderRadius: 8, cursor: 'pointer',
-                fontSize: 13, fontWeight: isActive ? 700 : 500, fontFamily: 'inherit',
+                fontSize: isSub ? 12 : 13, fontWeight: isActive ? 700 : isSub ? 500 : 500, fontFamily: 'inherit',
                 marginBottom: 2, position: 'relative',
               }}
               onMouseEnter={e => !isActive && (e.currentTarget.style.background = 'var(--crm-navy-3)')}
               onMouseLeave={e => !isActive && (e.currentTarget.style.background = 'transparent')}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                  <CrmIcon name={item.icon} size={17} />
+                <span style={{ display: 'flex', alignItems: 'center', gap: isSub ? 7 : 10, minWidth: 0 }}>
+                  {isSub && !collapsed && (
+                    <span style={{ width: 1, height: 14, background: 'var(--crm-navy-line)', flexShrink: 0, marginRight: 2 }} />
+                  )}
+                  <CrmIcon name={item.icon} size={isSub ? 14 : 17} />
                   {!collapsed && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</span>}
                 </span>
                 {!collapsed && (item.live ? (

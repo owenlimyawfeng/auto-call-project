@@ -134,132 +134,208 @@ function CampaignsKanban() {
   );
 }
 
-// ────────── 2. Operational dashboard ──────────
+// ────────── 2. Auto Call Insight ──────────
+const INSIGHT_BARS = [180, 210, 195, 240, 260, 230, 280, 310, 290, 340, 320, 342];
+const INSIGHT_MONTHS = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const INSIGHT_CONN   = [ 62,  65,  63,  67,  69,  66,  70,  71,  68,  72,  70,  71];
+const INSIGHT_CONV   = [ 18,  20,  19,  22,  24,  21,  26,  28,  25,  31,  29,  32];
+
 function CampaignsDashboard() {
+  const [period, setPeriod] = useState('month');
+  const maxBar = Math.max(...INSIGHT_BARS);
+
+  const CAMP_PERF = [
+    { name: 'Periodic Service May',    calls: 250,  conn: 71, conv: 38, cost: 105.00, cpa: 2.76,  bot: 'Sharing AI' },
+    { name: 'NPS Detractor Recovery',  calls: 80,   conn: 64, conv: 31, cost:  33.60, cpa: 1.36,  bot: 'Sharing AI' },
+    { name: 'Lapsed Members Win-back', calls: 602,  conn: 69, conv: 22, cost: 253.00, cpa: 19.20, bot: 'Sharing AI' },
+    { name: 'Subs Renewal — Q2',       calls: 412,  conn: 38, conv: 12, cost: 173.00, cpa: 35.10, bot: 'Subs AI'    },
+    { name: 'Document Upload Reminder',calls: 220,  conn: 52, conv: 14, cost:  92.40, cpa: 29.80, bot: 'Sharing AI' },
+  ];
+
+  const BOT_PERF = [
+    { bot: 'Sharing AI', campaigns: 12, calls: 3840, conn: 68, conv: 26, handoff: 12 },
+    { bot: 'Subs AI',    campaigns: 5,  calls: 1420, conn: 55, conv: 18, handoff: 9  },
+    { bot: 'EV AI',      campaigns: 2,  calls:  340, conn: 61, conv: 21, handoff: 14 },
+  ];
+
   return (
-    <CrmAppShell active="campaigns" breadcrumbs={['Call Center', 'Auto Call Campaigns']}
+    <CrmAppShell active="botInsight" breadcrumbs={['Call Center', 'Insight']}
       topRight={<>
-        <CrmSelect value="today" onChange={() => {}} options={['Today', 'This week', 'This month']} style={{ width: 130 }}/>
-        <CrmButton variant="green" size="sm" icon="plus">New Campaign</CrmButton>
+        <div style={{ display: 'flex', background: 'var(--crm-bg)', border: '1px solid var(--crm-border-2)', borderRadius: 8, overflow: 'hidden' }}>
+          {[['month','This month'],['quarter','This quarter'],['year','This year']].map(([v,l]) => (
+            <button key={v} onClick={() => setPeriod(v)} style={{
+              padding: '6px 14px', fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+              background: period === v ? 'var(--crm-green)' : 'transparent',
+              color: period === v ? '#fff' : 'var(--crm-fg-2)',
+              border: 'none', cursor: 'pointer', borderRight: v !== 'year' ? '1px solid var(--crm-border-2)' : 'none',
+            }}>{l}</button>
+          ))}
+        </div>
+        <CrmButton size="sm" variant="secondary" icon="download">Export</CrmButton>
       </>}>
-      <CrmPageHeader title="Auto Call Campaigns" subtitle="Operational view — what's running right now, and how it's performing." />
+      <CrmPageHeader
+        title="Auto Call Insight"
+        subtitle="Performance trends, campaign comparison, and bot efficiency — all in one view."
+      />
+
       <div className="crm-scroll" style={{ flex: 1, overflow: 'auto', padding: 24, background: 'var(--crm-bg)' }}>
 
-        {/* Hero strip with live activity */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 16, marginBottom: 16 }}>
-          <CrmCard padding={20}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 999, background: 'var(--crm-green)', boxShadow: '0 0 0 4px rgba(9,167,126,.16)' }} />
-                  <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--crm-green-deep)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Live</span>
-                </div>
-                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>Calls per minute</h3>
-                <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--crm-fg-2)' }}>Across 2 running campaigns</p>
+        {/* KPI strip */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14, marginBottom: 20 }}>
+          {[
+            { label: 'Total calls placed', value: '3,842', delta: '+18%', up: true,  sub: 'vs last period' },
+            { label: 'Connect rate',        value: '68%',   delta: '+4pp', up: true,  sub: 'avg across campaigns' },
+            { label: 'Conversion rate',     value: '26%',   delta: '+2pp', up: true,  sub: 'of connected calls' },
+            { label: 'Avg. call duration',  value: '0:54',  delta: '−3s',  up: true,  sub: 'per connected call' },
+            { label: 'Cost per conversion', value: 'RM 9.20', delta: '−12%', up: true, sub: 'blended across bots' },
+          ].map(k => (
+            <CrmCard key={k.label} padding={16}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--crm-fg-2)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>{k.label}</div>
+              <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 4 }}>{k.value}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: k.up ? 'var(--crm-green-deep)' : 'var(--crm-danger)' }}>{k.delta}</span>
+                <span style={{ fontSize: 11, color: 'var(--crm-fg-3)' }}>{k.sub}</span>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 36, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em' }}>14.2</div>
-                <div style={{ fontSize: 11, color: 'var(--crm-green)', fontWeight: 700 }}>+2.1 vs last hour</div>
+            </CrmCard>
+          ))}
+        </div>
+
+        {/* Trend charts row */}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, marginBottom: 16 }}>
+
+          {/* Calls volume trend */}
+          <CrmCard padding={20}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 14, fontWeight: 800 }}>Calls placed — monthly trend</h3>
+                <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--crm-fg-2)' }}>Last 12 months</p>
+              </div>
+              <div style={{ display: 'flex', gap: 14, fontSize: 11 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><span style={{ width: 10, height: 10, borderRadius: 2, background: 'var(--crm-green)' }} />Calls</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><span style={{ width: 10, height: 2, background: '#1E63D6' }} />Connect %</span>
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 80 }}>
-              {[6, 8, 7, 10, 12, 9, 11, 13, 14, 12, 15, 14, 16, 13, 14, 15, 17, 14, 18, 16, 14, 15, 13, 14].map((v, i) => (
-                <div key={i} style={{ flex: 1, height: `${v / 18 * 100}%`, background: i > 18 ? 'var(--crm-green)' : 'var(--crm-green-deep)', opacity: i > 18 ? 1 : 0.55, borderRadius: '2px 2px 0 0' }} />
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 110 }}>
+              {INSIGHT_BARS.map((v, i) => (
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
+                  <div style={{ width: '100%', height: `${v / maxBar * 100}%`, background: i === INSIGHT_BARS.length - 1 ? 'var(--crm-green)' : 'var(--crm-green-soft)', borderRadius: '3px 3px 0 0', border: i === INSIGHT_BARS.length - 1 ? 'none' : '1px solid var(--crm-green)', borderBottom: 'none', position: 'relative' }}>
+                    {i === INSIGHT_BARS.length - 1 && (
+                      <span style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', fontSize: 10, fontWeight: 800, color: 'var(--crm-green-deep)', whiteSpace: 'nowrap' }}>{v}</span>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--crm-fg-3)', marginTop: 6 }}>
-              <span>−24m</span><span>−18m</span><span>−12m</span><span>−6m</span><span>now</span>
+            {/* Connect rate line overlay — simplified as dots */}
+            <div style={{ display: 'flex', gap: 6, marginTop: 6, alignItems: 'center' }}>
+              {INSIGHT_MONTHS.map((m, i) => (
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 999, background: '#1E63D6', opacity: 0.5 + (INSIGHT_CONN[i] - 60) / 20 }} />
+                  <span style={{ fontSize: 9, color: 'var(--crm-fg-3)', textAlign: 'center', lineHeight: 1.2 }}>{m.replace(' ', '\n')}</span>
+                </div>
+              ))}
             </div>
           </CrmCard>
 
+          {/* Funnel summary */}
           <CrmCard padding={20}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800 }}>Today's pipeline</h3>
+            <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 800 }}>This month's funnel</h3>
             {[
-              ['Calls placed',     '342',   '↑ 18%', 'var(--crm-green)'],
-              ['Connected',        '234 · 68%', '↑ 4pp', 'var(--crm-green)'],
-              ['Bot resolved',     '156 · 67%', '↑ 6pp', 'var(--crm-green)'],
-              ['Escalated to agent', '24 · 10%', '↓ 2pp', 'var(--crm-warning)'],
-              ['Conversions',      '38 · 16%', '↑ 1.8pp', 'var(--crm-green)'],
-            ].map(([k, v, d, c]) => (
-              <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0', borderBottom: '1px solid var(--crm-border)', fontSize: 13 }}>
-                <span style={{ flex: 1, color: 'var(--crm-fg-2)' }}>{k}</span>
-                <span style={{ fontWeight: 700, color: 'var(--crm-fg-1)' }}>{v}</span>
-                <span style={{ fontSize: 11, fontWeight: 700, color: c, minWidth: 56, textAlign: 'right' }}>{d}</span>
+              ['Calls placed',       3842, 3842, 'var(--crm-green)'],
+              ['Connected',          2612, 3842, 'var(--crm-green)'],
+              ['Bot resolved',       2180, 3842, 'var(--crm-info)'],
+              ['Escalated to agent',  432, 3842, 'var(--crm-warning)'],
+              ['Converted',           998, 3842, 'var(--crm-green-deep)'],
+            ].map(([l, v, base, c]) => (
+              <div key={l} style={{ display: 'grid', gridTemplateColumns: '130px 1fr 46px', alignItems: 'center', gap: 10, padding: '7px 0' }}>
+                <span style={{ fontSize: 12, color: 'var(--crm-fg-2)' }}>{l}</span>
+                <span style={{ height: 18, background: 'var(--crm-bg)', borderRadius: 4, overflow: 'hidden' }}>
+                  <span style={{ display: 'block', width: `${v / base * 100}%`, height: '100%', background: c, borderRadius: 4 }} />
+                </span>
+                <span style={{ fontSize: 11, fontWeight: 700, textAlign: 'right' }}>{Math.round(v / base * 100)}%</span>
               </div>
             ))}
           </CrmCard>
         </div>
 
-        {/* Alerts */}
+        {/* Campaign performance table */}
         <CrmCard padding={0} style={{ marginBottom: 16 }}>
-          <div style={{ padding: '12px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--crm-border)' }}>
-            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 800 }}>Alerts &amp; signals</h3>
-            <CrmButton size="sm" variant="ghost">All alerts</CrmButton>
+          <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--crm-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 800 }}>Campaign performance</h3>
+            <CrmButton size="sm" variant="ghost" icon="filter">Filter</CrmButton>
           </div>
-          {[
-            { tone: 'warn',   icon: 'alert',     title: 'Subs Renewal — Q2', body: 'Connect rate dropped to 38% (target ≥ 50%). Consider re-record voice or shift to lunchtime slots.', t: '4m ago' },
-            { tone: 'info',   icon: 'info',      title: 'Document Upload Reminder', body: 'Paused for review — 220 / 220 recipients DNC-checked, awaiting compliance sign-off.', t: '12m ago' },
-            { tone: 'good',   icon: 'sparkle',   title: 'Periodic Service May — milestone', body: 'Crossed 50% completion with 38% conversion — best campaign of the quarter.', t: '28m ago' },
-          ].map((a, i, arr) => {
-            const palette = { warn: ['#FFF6DD', '#92400E'], info: ['#E1ECFB', '#1A4FAA'], good: ['#E0F2EC', '#0B7A5C'] }[a.tone];
-            return (
-              <div key={i} style={{ display: 'flex', gap: 12, padding: '14px 18px', borderBottom: i < arr.length - 1 ? '1px solid var(--crm-border)' : 'none', alignItems: 'flex-start' }}>
-                <span style={{ width: 32, height: 32, borderRadius: 8, background: palette[0], color: palette[1], display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <CrmIcon name={a.icon} size={15} />
+          <div style={{
+            display: 'grid', gridTemplateColumns: '2fr 80px 80px 80px 100px 100px 1fr',
+            padding: '10px 18px', background: '#fafbfc', borderBottom: '1px solid var(--crm-border)',
+            fontSize: 11, fontWeight: 700, color: 'var(--crm-fg-2)', textTransform: 'uppercase', letterSpacing: '0.04em',
+          }}>
+            <span>Campaign</span><span>Calls</span><span>Conn %</span><span>Conv %</span><span>Total cost</span><span>Cost / conv</span><span>Connect rate</span>
+          </div>
+          {CAMP_PERF.map((c, i) => (
+            <div key={c.name} style={{
+              display: 'grid', gridTemplateColumns: '2fr 80px 80px 80px 100px 100px 1fr',
+              padding: '13px 18px', alignItems: 'center', fontSize: 12,
+              borderBottom: i < CAMP_PERF.length - 1 ? '1px solid var(--crm-border)' : 'none',
+            }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}</div>
+                <div style={{ fontSize: 11, color: 'var(--crm-fg-2)', marginTop: 2 }}>{c.bot}</div>
+              </div>
+              <span style={{ fontWeight: 600 }}>{c.calls}</span>
+              <span style={{ fontWeight: 700, color: c.conn >= 60 ? 'var(--crm-green-deep)' : 'var(--crm-warning)' }}>{c.conn}%</span>
+              <span style={{ fontWeight: 700, color: c.conv >= 25 ? 'var(--crm-green-deep)' : 'var(--crm-fg-1)' }}>{c.conv}%</span>
+              <span style={{ color: 'var(--crm-fg-1)' }}>RM {c.cost.toFixed(2)}</span>
+              <span style={{ fontWeight: 700, color: c.cpa <= 5 ? 'var(--crm-green-deep)' : c.cpa >= 25 ? 'var(--crm-danger)' : 'var(--crm-fg-1)' }}>RM {c.cpa.toFixed(2)}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ flex: 1, height: 6, background: 'var(--crm-bg)', borderRadius: 999, overflow: 'hidden' }}>
+                  <span style={{ display: 'block', width: `${c.conn}%`, height: '100%', background: c.conn >= 60 ? 'var(--crm-green)' : '#E0A100', borderRadius: 999 }} />
                 </span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>{a.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--crm-fg-2)', marginTop: 2, lineHeight: 1.5 }}>{a.body}</div>
+                <span style={{ fontSize: 11, color: 'var(--crm-fg-3)', width: 28, textAlign: 'right' }}>{c.conn}%</span>
+              </div>
+            </div>
+          ))}
+        </CrmCard>
+
+        {/* Bot efficiency */}
+        <CrmCard padding={0}>
+          <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--crm-border)' }}>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 800 }}>Bot efficiency</h3>
+          </div>
+          <div style={{
+            display: 'grid', gridTemplateColumns: '160px 90px 90px 80px 80px 80px 1fr',
+            padding: '10px 18px', background: '#fafbfc', borderBottom: '1px solid var(--crm-border)',
+            fontSize: 11, fontWeight: 700, color: 'var(--crm-fg-2)', textTransform: 'uppercase', letterSpacing: '0.04em',
+          }}>
+            <span>Bot</span><span>Campaigns</span><span>Total calls</span><span>Conn %</span><span>Conv %</span><span>Handoff %</span><span>Resolution rate</span>
+          </div>
+          {BOT_PERF.map((b, i) => {
+            const resolved = 100 - b.handoff;
+            return (
+              <div key={b.bot} style={{
+                display: 'grid', gridTemplateColumns: '160px 90px 90px 80px 80px 80px 1fr',
+                padding: '13px 18px', alignItems: 'center', fontSize: 12,
+                borderBottom: i < BOT_PERF.length - 1 ? '1px solid var(--crm-border)' : 'none',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 28, height: 28, borderRadius: 7, background: 'var(--crm-green-soft)', color: 'var(--crm-green-deep)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><CrmIcon name="bot" size={13} /></span>
+                  <span style={{ fontWeight: 700 }}>{b.bot}</span>
                 </div>
-                <span style={{ fontSize: 11, color: 'var(--crm-fg-3)', whiteSpace: 'nowrap' }}>{a.t}</span>
+                <span style={{ color: 'var(--crm-fg-2)' }}>{b.campaigns}</span>
+                <span style={{ fontWeight: 600 }}>{b.calls.toLocaleString()}</span>
+                <span style={{ fontWeight: 700, color: b.conn >= 60 ? 'var(--crm-green-deep)' : 'var(--crm-warning)' }}>{b.conn}%</span>
+                <span style={{ fontWeight: 700, color: 'var(--crm-fg-1)' }}>{b.conv}%</span>
+                <span style={{ color: 'var(--crm-fg-2)' }}>{b.handoff}%</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ flex: 1, height: 6, background: 'var(--crm-bg)', borderRadius: 999, overflow: 'hidden' }}>
+                    <span style={{ display: 'block', width: `${resolved}%`, height: '100%', background: 'var(--crm-green)', borderRadius: 999 }} />
+                  </span>
+                  <span style={{ fontSize: 11, color: 'var(--crm-fg-3)', width: 30, textAlign: 'right' }}>{resolved}%</span>
+                </div>
               </div>
             );
           })}
         </CrmCard>
 
-        {/* Compact campaign table */}
-        <CrmCard padding={0}>
-          <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--crm-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 800 }}>All campaigns</h3>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <CrmButton size="sm" variant="secondary" icon="filter">Filter</CrmButton>
-              <CrmButton size="sm" variant="secondary" icon="download">Export</CrmButton>
-            </div>
-          </div>
-          <div style={{
-            display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 90px 90px 110px',
-            padding: '10px 18px', background: '#fafbfc', borderBottom: '1px solid var(--crm-border)',
-            fontSize: 11, fontWeight: 700, color: 'var(--crm-fg-2)', textTransform: 'uppercase', letterSpacing: '0.04em',
-          }}>
-            <span>Campaign</span><span>Status</span><span>Bot</span><span>Progress</span><span>Conn.</span><span>Conv.</span><span></span>
-          </div>
-          {[
-            { n: 'Periodic Service May', s: 'running',   b: 'Sharing AI', d: 142, t: 250, conn: '71%', conv: '38%' },
-            { n: 'NPS Detractor Recovery', s: 'running', b: 'Sharing AI', d: 41,  t: 80,  conn: '64%', conv: '31%' },
-            { n: 'Subs Renewal Q2',     s: 'scheduled', b: 'Subs AI',     d: 0,   t: 412, conn: '—', conv: '—' },
-            { n: 'Document Upload Reminder', s: 'paused', b: 'Sharing AI', d: 88, t: 220, conn: '52%', conv: '14%' },
-            { n: 'Lapsed Members Win-back', s: 'completed', b: 'Sharing AI', d: 602, t: 602, conn: '69%', conv: '22%' },
-          ].map((c, i) => (
-            <div key={c.n} style={{
-              display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 2fr 90px 90px 110px',
-              padding: '12px 18px', alignItems: 'center', fontSize: 12,
-              borderBottom: i < 4 ? '1px solid var(--crm-border)' : 'none',
-            }}>
-              <span style={{ fontWeight: 700 }}>{c.n}</span>
-              <CrmBadge tone={c.s} dot>{c.s}</CrmBadge>
-              <span style={{ color: 'var(--crm-fg-2)' }}>{c.b}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ flex: 1, height: 5, background: 'var(--crm-bg)', borderRadius: 999, overflow: 'hidden' }}>
-                  <span style={{ display: 'block', width: c.t ? `${c.d / c.t * 100}%` : '0%', height: '100%', background: c.s === 'paused' ? 'var(--crm-warning)' : 'var(--crm-green)' }} />
-                </span>
-                <span style={{ fontSize: 11, color: 'var(--crm-fg-2)', whiteSpace: 'nowrap' }}>{c.d} / {c.t}</span>
-              </div>
-              <span style={{ fontWeight: 600 }}>{c.conn}</span>
-              <span style={{ fontWeight: 700, color: c.conv === '—' ? 'var(--crm-fg-3)' : 'var(--crm-green-deep)' }}>{c.conv}</span>
-              <CrmButton size="sm" variant="secondary">Open</CrmButton>
-            </div>
-          ))}
-        </CrmCard>
       </div>
     </CrmAppShell>
   );

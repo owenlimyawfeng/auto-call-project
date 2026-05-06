@@ -37,11 +37,6 @@ function BotLibraryScreen() {
                 </div>
               </div>
               <p style={{ margin: 0, fontSize: 12.5, color: 'var(--crm-fg-2)', lineHeight: 1.5, minHeight: 38 }}>{t.desc}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--crm-fg-2)', paddingTop: 10, borderTop: '1px solid var(--crm-border)' }}>
-                <span><b style={{ color: 'var(--crm-fg-1)' }}>{t.steps}</b> steps</span>
-                <span><b style={{ color: 'var(--crm-fg-1)' }}>{t.runs.toLocaleString()}</b> runs</span>
-                <span><b style={{ color: 'var(--crm-green-deep)' }}>{t.conv}</b> conv.</span>
-              </div>
               <div style={{ display: 'flex', gap: 4 }}>
                 {t.lang.map(l => <span key={l} style={{ padding: '2px 7px', background: 'var(--crm-bg)', borderRadius: 4, fontSize: 10, fontWeight: 700, color: 'var(--crm-fg-2)' }}>{l}</span>)}
               </div>
